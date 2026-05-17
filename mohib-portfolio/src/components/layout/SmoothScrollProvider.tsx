@@ -1,37 +1,69 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
+
+interface SmoothScrollProviderProps {
+  children: ReactNode;
+}
 
 export default function SmoothScrollProvider({
   children,
-}: {
-  children: React.ReactNode;
-}) {
-  const lenis = useRef<Lenis | null>(null);
+}: SmoothScrollProviderProps) {
+  const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    lenis.current = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    const isMobile =
+      /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+        navigator.userAgent
+      ) || window.innerWidth < 768;
+
+    // destroy existing instance
+    lenisRef.current?.destroy();
+
+    lenisRef.current = new Lenis({
+      duration: isMobile ? 0.55 : 0.8,
+
+      // smoother desktop wheel
       smoothWheel: true,
-      syncTouch: true,
+
+      // IMPORTANT:
+      // native mobile scrolling feels much better
+      smoothTouch: false,
+      syncTouch: false,
+
+      // lighter easing
+      easing: (t: number) => 1 - Math.pow(1 - t, 3),
+
       orientation: "vertical",
+      gestureOrientation: "vertical",
+      wheelMultiplier: 1,
+      touchMultiplier: 1,
+      infinite: false,
     });
 
-    let frame = 0;
+    let rafId = 0;
 
     const raf = (time: number) => {
-      lenis.current?.raf(time);
-      frame = requestAnimationFrame(raf);
+      lenisRef.current?.raf(time);
+      rafId = requestAnimationFrame(raf);
     };
 
-    frame = requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
+
+    // optional resize handling
+    const handleResize = () => {
+      lenisRef.current?.resize();
+    };
+
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      cancelAnimationFrame(frame);
-      lenis.current?.destroy();
-      lenis.current = null;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", handleResize);
+
+      lenisRef.current?.destroy();
+      lenisRef.current = null;
     };
   }, []);
 
