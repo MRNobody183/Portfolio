@@ -18,18 +18,14 @@ export default function SmoothScrollProvider({
         navigator.userAgent
       ) || window.innerWidth < 768;
 
-    // destroy existing instance
-    lenisRef.current?.destroy();
-
     lenisRef.current = new Lenis({
-      duration: isMobile ? 0.55 : 0.8,
+      duration: isMobile ? 0.5 : 0.8,
 
-      // smoother desktop wheel
+      // smooth desktop wheel scrolling
       smoothWheel: true,
 
-      // IMPORTANT:
-      // native mobile scrolling feels much better
-      smoothTouch: false,
+      // IMPORTANT
+      // prevents delayed mobile scrolling
       syncTouch: false,
 
       // lighter easing
@@ -37,12 +33,12 @@ export default function SmoothScrollProvider({
 
       orientation: "vertical",
       gestureOrientation: "vertical",
-      wheelMultiplier: 1,
       touchMultiplier: 1,
+      wheelMultiplier: 1,
       infinite: false,
     });
 
-    let rafId = 0;
+    let rafId: number;
 
     const raf = (time: number) => {
       lenisRef.current?.raf(time);
@@ -51,16 +47,15 @@ export default function SmoothScrollProvider({
 
     rafId = requestAnimationFrame(raf);
 
-    // optional resize handling
-    const handleResize = () => {
+    const resize = () => {
       lenisRef.current?.resize();
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", resize);
 
     return () => {
       cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", resize);
 
       lenisRef.current?.destroy();
       lenisRef.current = null;
