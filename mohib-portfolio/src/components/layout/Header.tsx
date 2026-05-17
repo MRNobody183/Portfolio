@@ -12,7 +12,7 @@ const navigation = [
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
   { label: "Contact", href: "#contact" },
-  { label: "Resume", href: "/resume.pdf" },
+  { label: "Resume", href: "/Mohib-Rehman-Full-Stack-Developer-CV.pdf" },
 ];
 
 const navItemVariants = {
