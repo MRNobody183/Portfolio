@@ -5,9 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { Mail, Download, Copy, Check } from "lucide-react";
 
 const SOCIALS = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/mohib" },
-  { label: "GitHub",   href: "https://github.com/mohib" },
-  { label: "GitLab",   href: "https://gitlab.com/mohib" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/mohib-ur-rehman-70bb321a4" },
 ];
 
 const NAV = [
@@ -202,7 +200,6 @@ export default function ContactSection() {
                 {[
                   { label: "Status",     value: "Available",      active: true  },
                   { label: "Mode",       value: "Contract / Full-time",  active: false },
-                  { label: "Location",   value: "Pakistan / Remote",     active: false },
                 ].map((row) => (
                   <div key={row.label} className="flex items-center justify-between gap-4">
                     <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-cyan-400/35">
@@ -226,9 +223,6 @@ export default function ContactSection() {
             <div className="space-y-1">
               <p className="font-mono text-[11px] uppercase tracking-[0.45em] text-cyan-300/60">
                 Mohib — Digital Engineer
-              </p>
-              <p className="font-mono text-[10px] text-slate-500 tracking-[0.2em]">
-                crafted in Pakistan
               </p>
             </div>
 
